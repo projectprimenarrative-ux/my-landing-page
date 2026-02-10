@@ -1,8 +1,7 @@
-// Surreal Fluid Quantum Field + Neon Circuit Logic
+// Neon Circuit Logic Animation (Pure Digital)
 const canvas = document.getElementById('quantum-canvas');
 const ctx = canvas.getContext('2d');
 
-let particles = [];
 let circuits = [];
 let logoCenter = { x: 0, y: 0 };
 let tick = 0;
@@ -25,45 +24,7 @@ function resize() {
 window.addEventListener('resize', resize);
 window.addEventListener('load', resize);
 
-// --- 1. Organic Quantum Particles (Background) ---
-class SurrealParticle {
-    constructor() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.vx = (Math.random() - 0.5) * 0.5;
-        this.vy = (Math.random() - 0.5) * 0.5;
-        this.size = Math.random() * 2 + 0.5;
-        this.baseSize = this.size;
-        this.angleX = Math.random() * Math.PI * 2;
-        this.angleY = Math.random() * Math.PI * 2;
-        this.speedX = Math.random() * 0.02 + 0.005;
-        this.speedY = Math.random() * 0.02 + 0.005;
-        this.hue = Math.random() > 0.5 ? 16 : 30;
-    }
-
-    update() {
-        this.x += Math.cos(this.angleX) * 0.5 + this.vx;
-        this.y += Math.sin(this.angleY) * 0.5 + this.vy;
-        this.angleX += this.speedX;
-        this.angleY += this.speedY;
-        this.size = this.baseSize + Math.sin(tick * 0.05 + this.angleX) * 0.5;
-
-        // Wrap
-        if (this.x < -20) this.x = canvas.width + 20;
-        if (this.x > canvas.width + 20) this.x = -20;
-        if (this.y < -20) this.y = canvas.height + 20;
-        if (this.y > canvas.height + 20) this.y = -20;
-    }
-
-    draw() {
-        ctx.fillStyle = `hsla(${this.hue}, 100%, 60%, 0.4)`; // Lower opacity for background
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, Math.abs(this.size), 0, Math.PI * 2);
-        ctx.fill();
-    }
-}
-
-// --- 2. Neon Circuit Logic (Foreground) ---
+// --- Neon Circuit Logic ---
 class CircuitPacket {
     constructor() {
         this.reset();
@@ -72,13 +33,15 @@ class CircuitPacket {
     reset() {
         this.x = Math.floor(Math.random() * canvas.width);
         this.y = Math.floor(Math.random() * canvas.height);
-        this.size = Math.random() * 2 + 1;
-        this.speed = Math.random() * 2 + 2;
+        this.size = Math.random() * 2 + 1.5; // Slightly thicker
+        this.speed = Math.random() * 3 + 2; // Faster data flow
         this.direction = Math.floor(Math.random() * 4); // 0: Up, 1: Right, 2: Down, 3: Left
         this.life = Math.random() * 100 + 50;
         this.history = []; // Trail
-        this.maxLength = 10;
-        this.hue = Math.random() > 0.5 ? 180 : 30; // Cyan (Tech) or Orange (Theme)
+        this.maxLength = 15; // Longer trails for more "glow" presence
+        this.hue = Math.random() > 0.5 ? 180 : 30; // Cyan (Tech) or Cosmic Orange
+        // Chance for white/gold data packets
+        if (Math.random() < 0.1) this.hue = 60;
     }
 
     update() {
@@ -99,7 +62,8 @@ class CircuitPacket {
         }
 
         this.life--;
-        if (this.life <= 0 || this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+        // Bounds check
+        if (this.life <= 0 || this.x < -50 || this.x > canvas.width + 50 || this.y < -50 || this.y > canvas.height + 50) {
             this.reset();
         }
     }
@@ -108,9 +72,9 @@ class CircuitPacket {
         if (this.history.length < 2) return;
 
         ctx.beginPath();
-        ctx.strokeStyle = `hsla(${this.hue}, 100%, 70%, 0.8)`;
-        ctx.lineWidth = 1.5;
-        // Draw Trail
+        // Core Trail
+        ctx.strokeStyle = `hsla(${this.hue}, 100%, 70%, 1)`;
+        ctx.lineWidth = 2;
         ctx.moveTo(this.history[0].x, this.history[0].y);
         for (let i = 1; i < this.history.length; i++) {
             ctx.lineTo(this.history[i].x, this.history[i].y);
@@ -118,32 +82,32 @@ class CircuitPacket {
         ctx.lineTo(this.x, this.y);
         ctx.stroke();
 
-        // Draw Head
-        ctx.fillStyle = `hsla(${this.hue}, 100%, 90%, 1)`;
+        // Outer Glow (Neon Effect)
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = `hsla(${this.hue}, 100%, 50%, 1)`;
+        ctx.stroke();
+        ctx.shadowBlur = 0; // Reset for performance
+
+        // Data Packet Head (Bright Core)
+        ctx.fillStyle = `hsla(${this.hue}, 100%, 95%, 1)`;
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fill();
 
-        // Glow
-        ctx.shadowBlur = 10;
-        ctx.shadowColor = `hsla(${this.hue}, 100%, 50%, 0.8)`;
-        ctx.stroke();
-        ctx.shadowBlur = 0; // Reset
+        // Extra Head Glow
+        ctx.shadowBlur = 20;
+        ctx.shadowColor = `hsla(${this.hue}, 100%, 50%, 1)`;
+        ctx.fill();
+        ctx.shadowBlur = 0;
     }
 }
 
 function init() {
-    particles = [];
     circuits = [];
 
-    // Background Quantum Count
-    const particleCount = window.innerWidth < 480 ? 40 : 80;
-    for (let i = 0; i < particleCount; i++) {
-        particles.push(new SurrealParticle());
-    }
-
-    // Foreground Circuit Count
-    const circuitCount = window.innerWidth < 480 ? 10 : 20;
+    // Increased Circuit Count since background particles are gone
+    // We want the screen to feel busy but organized
+    const circuitCount = window.innerWidth < 480 ? 15 : 30;
     for (let i = 0; i < circuitCount; i++) {
         circuits.push(new CircuitPacket());
     }
@@ -153,43 +117,20 @@ function init() {
 
 function animate() {
     requestAnimationFrame(animate);
-    // Dark fade effect for trails
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    // Note: fillRect instead of clearRect creates trails for everything, 
-    // but for specific circuit trails we use history array. 
-    // Let's use clearRect to keep background clean, and handle trails manually in Circuit class.
+
+    // Darkest background for maximum contrast
+    // Using clearRect helps with the crisp neon look, but we want trails to fade? 
+    // Actually, "Neon Traveling" usually looks best with a clean slate each frame 
+    // because we draw the trail manually in the class.
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // 1. Render Background (Organic)
-    for (let i = 0; i < particles.length; i++) {
-        particles[i].update();
-        particles[i].draw();
-
-        // Connections
-        for (let j = i; j < particles.length; j++) {
-            let dx = particles[i].x - particles[j].x;
-            let dy = particles[i].y - particles[j].y;
-            let distance = Math.sqrt(dx * dx + dy * dy);
-            if (distance < 100) {
-                ctx.beginPath();
-                let opacity = 1 - (distance / 100);
-                ctx.strokeStyle = `rgba(255, 112, 67, ${opacity * 0.1})`; // Very faint lines
-                ctx.lineWidth = 0.5;
-                ctx.moveTo(particles[i].x, particles[i].y);
-                ctx.lineTo(particles[j].x, particles[j].y);
-                ctx.stroke();
-            }
-        }
-    }
-
-    // 2. Render Circuits (Digital)
+    // Render Circuits (Digital)
     for (let i = 0; i < circuits.length; i++) {
         circuits[i].update();
         circuits[i].draw();
     }
 
-    // 3. Render Supernova (if triggered)
+    // Render Supernova (if triggered)
     for (let i = 0; i < explosionParticles.length; i++) {
         explosionParticles[i].update();
         explosionParticles[i].draw();
@@ -203,7 +144,7 @@ function animate() {
 }
 
 
-// --- Supernova Explosion Logic (Kept from before) ---
+// --- Supernova Explosion Logic (Kept) ---
 let explosionParticles = [];
 
 class ExplosionParticle {
@@ -245,7 +186,7 @@ function triggerSupernova() {
     }
 }
 
-// Attach listener to Profile Group (Name Container)
+// Attach listener to Profile Group 
 const profileGroup = document.querySelector('.profile-group');
 if (profileGroup) {
     profileGroup.addEventListener('click', (e) => {
