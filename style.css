@@ -28,11 +28,14 @@ body {
     overflow-x: hidden;
     min-height: 100vh;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    /* Stack header and content */
+    justify-content: flex-start;
+    /* Start from top */
     align-items: center;
 }
 
-/* Background Canvas */
+/* ... Background Canvas ... */
 #quantum-canvas {
     position: fixed;
     top: 0;
@@ -43,24 +46,63 @@ body {
     opacity: 0.8;
 }
 
+/* Liquid Glass Header */
+.liquid-header {
+    width: 100%;
+    /* max-width: 600px;  Centered column look */
+    height: 50vh;
+    /* Covers half the page */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.00) 100%);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0 0 50px 50px;
+    /* Big rounded glass bottom */
+    margin-bottom: 0;
+    /* Flush with content */
+    position: relative;
+    z-index: 10;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    /* Deep shadow depth */
+    overflow: hidden;
+    /* Clip inner content at rounded corners */
+}
+
+/* Add a liquid reflection sheen */
+.liquid-header::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, transparent 40%);
+    pointer-events: none;
+}
+
+.profile-header {
+    text-align: center;
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 480px;
+    /* Constrain content width inside header */
+}
+
 .container {
     width: 100%;
     max-width: 480px;
-    padding: 2rem;
+    padding: 1rem 2rem 2rem;
+    /* Adjusted top padding */
     position: relative;
     z-index: 1;
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-}
-
-/* Header */
-.profile-header {
-    text-align: center;
-    margin-bottom: 1rem;
-    position: relative;
-    z-index: 10;
-    /* Ensure it's above canvas */
 }
 
 /* JWST Wireframe Container */
@@ -376,22 +418,30 @@ h1 {
 }
 
 @media (max-width: 480px) {
+    .liquid-header {
+        height: 52vh;
+        /* Slightly more on mobile for breathing room */
+        border-radius: 0 0 40px 40px;
+    }
+
     .container {
-        padding: 1rem;
+        padding: 1.5rem 1rem 3rem;
+        /* Add bottom padding for scroll */
         gap: 0.8rem;
-        height: 100vh;
-        justify-content: center;
+        height: auto;
+        /* Allow flow */
+        justify-content: flex-start;
     }
 
     .profile-header {
-        margin-bottom: 0.5rem;
+        margin-bottom: 0;
     }
 
+    /* Illustration Size */
     .illustration-container {
-        width: 100px;
-        /* Smaller for mobile */
-        height: 100px;
-        margin-bottom: 0.5rem;
+        width: 160px;
+        height: 160px;
+        margin-bottom: 1rem;
     }
 
     .illustration-container svg {
@@ -401,8 +451,6 @@ h1 {
 
     h1 {
         font-size: 1.8rem;
-        /* Smaller title */
-        margin-bottom: 0.2rem;
     }
 
     .tagline {
