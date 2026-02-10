@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vijay Ragavan G | Innovation Catalyst</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <canvas id="quantum-canvas"></canvas>
+
+    <div class="container">
+        <header class="profile-header">
+            <div class="illustration-container">
+                <!-- James Webb Space Telescope Mirror Wireframe SVG -->
+                <svg width="140" height="140" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Central Hexagon -->
+                    <path d="M50 42 L58 46 L58 54 L50 58 L42 54 L42 46 Z" stroke="#FF7043" stroke-width="0.5" />
+                    <!-- Inner Ring -->
+                    <path d="M50 26 L58 30 L58 38 L50 42 L42 38 L42 30 Z" stroke="#FF7043" stroke-width="0.5" />
+                    <path d="M64 34 L72 38 L72 46 L64 50 L56 46 L56 38 Z" stroke="#FF7043" stroke-width="0.5" />
+                    <path d="M64 50 L72 54 L72 62 L64 66 L56 62 L56 54 Z" stroke="#FF7043" stroke-width="0.5" />
+                    <path d="M50 58 L58 62 L58 70 L50 74 L42 70 L42 62 Z" stroke="#FF7043" stroke-width="0.5" />
+                    <path d="M36 50 L44 54 L44 62 L36 66 L28 62 L28 54 Z" stroke="#FF7043" stroke-width="0.5" />
+                    <path d="M36 34 L44 38 L44 46 L36 50 L28 46 L28 38 Z" stroke="#FF7043" stroke-width="0.5" />
+                    <!-- Outer Ring Logic (Simplified for aesthetic) -->
+                    <circle cx="50" cy="50" r="45" stroke="#FF7043" stroke-width="0.2" stroke-dasharray="2 2"
+                        opacity="0.5" />
+                    <circle cx="50" cy="50" r="35" stroke="#FF7043" stroke-width="0.2" opacity="0.3" />
+
+                    <!-- Orbital Lines -->
+                    <ellipse cx="50" cy="50" rx="48" ry="10" stroke="#FF7043" stroke-width="0.2"
+                        transform="rotate(45 50 50)" opacity="0.4" />
+                    <ellipse cx="50" cy="50" rx="48" ry="10" stroke="#FF7043" stroke-width="0.2"
+                        transform="rotate(-45 50 50)" opacity="0.4" />
+                </svg>
+            </div>
+
+            <!-- Profile Identity Container -->
+            <section class="group-container profile-group">
+                <div class="corner-accents"></div>
+                <h1 class="glitch" data-text="Vijay Ragavan G">Vijay Ragavan G</h1>
+                <p class="tagline">CEO Prime Directive / Innovation Catalyst</p>
+            </section>
+        </header>
+
+        <!-- Section 1: Professional Identity -->
+        <section class="group-container professional-group">
+            <h2 class="group-label">PROFESSIONAL // SELF</h2>
+            <div class="corner-accents"></div>
+
+            <a href="https://www.linkedin.com/in/vijay-ragavan-bba313264" target="_blank" class="link-card"
+                id="linkedin-link">
+                <span class="label">LINKEDIN PROFILE</span>
+            </a>
+
+            <div class="actions-row">
+                <button class="action-btn" onclick="downloadVCard()">
+                    SAVE CONTACT
+                </button>
+                <button class="action-btn" onclick="openWhatsApp()">
+                    WHATSAPP
+                </button>
+            </div>
+        </section>
+
+        <!-- Section 2: Company Ecosystem (Moved to Bottom) -->
+        <section class="group-container company-group">
+            <h2 class="group-label">COMPANY // PRIME DIRECTIVE</h2>
+            <div class="corner-accents"></div>
+
+            <a href="https://www.primedirective.space" target="_blank" class="link-card" id="company-link">
+                <span class="label">VISIT WEBSITE</span>
+            </a>
+
+            <div class="social-row">
+                <a href="https://www.instagram.com/project.prime.directive?utm_source=qr&igsh=bThic3drdmUxd3lq"
+                    target="_blank" class="link-card social-pill" id="instagram-link">
+                    <!-- Instagram SVG -->
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="icon-svg">
+                        <rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" stroke-width="2" />
+                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37Z" stroke="currentColor"
+                            stroke-width="2" />
+                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" />
+                    </svg>
+                </a>
+                <a href="https://x.com/Pdirective000" target="_blank" class="link-card social-pill" id="x-link">
+                    <!-- X (Twitter) SVG -->
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="icon-svg">
+                        <path d="M4 4l16 16M4 20l16-16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    </svg>
+                </a>
+            </div>
+        </section>
+
+        <!-- Footer QR Removed as requested -->
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
