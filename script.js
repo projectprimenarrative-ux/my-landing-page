@@ -3,11 +3,13 @@ class QuantumAudio {
     constructor() {
         this.context = null;
         this.masterGain = null;
-        this.oscillators = [];
-        this.baseFreq = 220; // A3 (Standard mid-range)
+        this.audioBuffer = null;
+        this.sourceNode = null;
+        this.isMuted = true;
+        this.isLoaded = false;
     }
 
-    init() {
+    async init() {
         if (this.context) return; // Already running
 
         try {
@@ -15,109 +17,202 @@ class QuantumAudio {
             const AudioContext = window.AudioContext || window.webkitAudioContext;
             this.context = new AudioContext();
 
-            // Master Volume - Set DIRECTLY (No Ramps to avoid timing bugs)
+            // Master Volume
             this.masterGain = this.context.createGain();
-            this.masterGain.gain.setValueAtTime(0.5, this.context.currentTime);
+            this.masterGain.gain.setValueAtTime(0, this.context.currentTime); // Start MUTED
             this.masterGain.connect(this.context.destination);
 
-            // FORCE UNLOCK
-            this.unlockAudio();
-
-            // STARTUP CHIRP (Verification Sound)
-            const chirp = this.context.createOscillator();
-            chirp.frequency.setValueAtTime(880, this.context.currentTime); // High A5
-            chirp.connect(this.masterGain);
-            chirp.start();
-            chirp.stop(this.context.currentTime + 0.1); // Short blip
-
-            // Layer 1: Foundation
-            this.createOscillator(this.baseFreq, 'sine', 0, 0.5);
-
-            // Layer 2: Harmony
-            this.createOscillator(this.baseFreq * 1.5, 'triangle', 0.1, 0.2);
-
-            // Layer 3: High Sparkle (Continuous High Pitch to Guarantee Audibility)
-            this.createOscillator(this.baseFreq * 2, 'triangle', 0.05, 0.15);
-
-            // Force Resume
-            if (this.context.state === 'suspended') {
-                this.context.resume();
-            }
+            // Load the MP3
+            await this.loadAudio('audio.mp3');
 
         } catch (e) {
             console.error('Web Audio Error:', e);
         }
     }
 
-    unlockAudio() {
-        // Create an empty three-second buffer at the sample rate of the AudioContext
-        const buffer = this.context.createBuffer(1, 1, 22050);
-        const source = this.context.createBufferSource();
-        source.buffer = buffer;
-        source.connect(this.context.destination);
-        source.start(0);
+    async loadAudio(url) {
+        try {
+            const response = await fetch(url);
+            const arrayBuffer = await response.arrayBuffer();
+            this.audioBuffer = await this.context.decodeAudioData(arrayBuffer);
+            this.isLoaded = true;
+            console.log('Audio Loaded');
+
+            // If user already clicked "On" while loading, start now
+            if (!this.isMuted) {
+                this.play();
+                this.fadeIn();
+            }
+        } catch (e) {
+            console.error('Failed to load audio:', e);
+        }
     }
 
-    createOscillator(freq, type, detune, vol) {
-        const osc = this.context.createOscillator();
-        const gain = this.context.createGain();
+    play() {
+        if (!this.context || !this.audioBuffer) return;
 
-        osc.type = type;
-        osc.frequency.setValueAtTime(freq, this.context.currentTime);
-        osc.detune.setValueAtTime(detune * 100, this.context.currentTime);
+        // Stop previous if exists
+        if (this.sourceNode) {
+            try { this.sourceNode.stop(); } catch (e) { }
+        }
 
-        gain.gain.setValueAtTime(vol, this.context.currentTime);
+        this.sourceNode = this.context.createBufferSource();
+        this.sourceNode.buffer = this.audioBuffer;
+        this.sourceNode.loop = true; // Loop the MP3
+        this.sourceNode.connect(this.masterGain);
+        this.sourceNode.start(0);
+    }
 
-        osc.connect(gain);
-        gain.connect(this.masterGain);
-        osc.start();
+    stop() {
+        if (this.sourceNode) {
+            try {
+                this.sourceNode.stop();
+                this.sourceNode = null;
+            } catch (e) { }
+        }
+    }
 
-        this.oscillators.push({ osc, gain });
+    toggleSound(enable) {
+        if (!this.context) this.init(); // Initialize on first click
+
+        // Ensure context is running
+        if (this.context && this.context.state === 'suspended') {
+            this.context.resume();
+        }
+
+        this.isMuted = !enable;
+
+        if (enable) {
+            // If loaded, play and fade in. If not loaded, init() will handle it.
+            if (this.isLoaded) {
+                // Only start a new source if one isn't playing or if we want to restart
+                // For ambient loops, usually we just set volume up. 
+                // But if we stopped it completely to save resources, we need to restart.
+                // Let's restart to be safe and ensure sync.
+                this.play();
+                this.fadeIn();
+            }
+        } else {
+            this.fadeOut();
+        }
     }
 
     fadeIn() {
         if (!this.masterGain) return;
         const now = this.context.currentTime;
         this.masterGain.gain.cancelScheduledValues(now);
-        this.masterGain.gain.setValueAtTime(0, now);
-        this.masterGain.gain.linearRampToValueAtTime(0.5, now + 2); // 50% Volume in 2s
+        this.masterGain.gain.setValueAtTime(this.masterGain.gain.value, now);
+        this.masterGain.gain.linearRampToValueAtTime(0.5, now + 1.5); // Smooth fade in
+    }
+
+    fadeOut() {
+        if (!this.masterGain) return;
+        const now = this.context.currentTime;
+        this.masterGain.gain.cancelScheduledValues(now);
+        this.masterGain.gain.setValueAtTime(this.masterGain.gain.value, now);
+        this.masterGain.gain.linearRampToValueAtTime(0, now + 0.5); // Quick fade out
+
+        // Stop the source after fade to save resources
+        setTimeout(() => {
+            if (this.isMuted) this.stop();
+        }, 600);
     }
 }
 
 // --- Interaction Logic ---
 document.addEventListener('DOMContentLoaded', () => {
 
-    // ONE-TIME SETUP
-    let audioInitialized = false;
+    // AUDIO SETUP
     const audioSystem = new QuantumAudio();
+    const soundBtn = document.getElementById('sound-toggle');
+    const soundWaves = document.getElementById('sound-waves');
+    const bgVideo = document.getElementById('bg-video');
 
-    const startAudioInteraction = (e) => {
-        if (audioInitialized) return;
+    // State Tracking - Default to ON
+    let isSoundOn = true;
 
-        // This runs strictly on user tap/click
-        audioSystem.init();
-        audioInitialized = true;
+    // Helper to update UI
+    const updateUI = (active) => {
+        if (soundBtn && soundWaves) {
+            if (active) {
+                soundBtn.classList.add('active');
+                soundWaves.style.opacity = '1';
+            } else {
+                soundBtn.classList.remove('active');
+                soundWaves.style.opacity = '0';
+            }
+        }
+    }
 
-        // Clean up listeners
-        document.removeEventListener('click', startAudioInteraction);
-        document.removeEventListener('touchstart', startAudioInteraction);
-        document.removeEventListener('keydown', startAudioInteraction);
+    // Initialize - Attempt Autoplay
+    updateUI(true); // Show as ON immediately
+
+    // Try to play immediately (might be blocked)
+    const tryAutoplay = async () => {
+        try {
+            await audioSystem.toggleSound(true);
+            if (bgVideo) bgVideo.muted = false;
+            console.log("Autoplay success");
+        } catch (e) {
+            console.log("Autoplay blocked, waiting for interaction");
+            // If blocked, we are technically "off" until interaction, strictly speaking
+            // But we keep UI "ON" to show intent, catch first click
+        }
     };
 
-    // Aggressive Listeners
-    document.addEventListener('click', startAudioInteraction);
-    document.addEventListener('touchstart', startAudioInteraction);
-    document.addEventListener('keydown', startAudioInteraction);
+    tryAutoplay();
 
-    // Attach listener to Profile Group as normal
-    const profileGroup = document.querySelector('.profile-group');
+    // Global Unlocker - Ensures sound starts on first interaction if autoplay failed
+    // Or if user just interacts with the page in general
+    const unlockHandler = () => {
+        if (isSoundOn) {
+            audioSystem.context.resume().then(() => {
+                if (audioSystem.isLoaded && !audioSystem.sourceNode) {
+                    audioSystem.play();
+                    audioSystem.fadeIn();
+                }
+            });
+            if (bgVideo) bgVideo.muted = false;
+        }
+        document.removeEventListener('click', unlockHandler);
+        document.removeEventListener('touchstart', unlockHandler);
+        document.removeEventListener('keydown', unlockHandler);
+    };
+
+    document.addEventListener('click', unlockHandler);
+    document.addEventListener('touchstart', unlockHandler);
+    document.addEventListener('keydown', unlockHandler);
+
+
+    // Toggle Handler
+    if (soundBtn) {
+        soundBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Don't trigger the global unlocker twice if clicking this
+
+            isSoundOn = !isSoundOn;
+
+            // 1. Toggle Audio Engine
+            audioSystem.toggleSound(isSoundOn);
+
+            // 2. Toggle Video Audio
+            if (bgVideo) {
+                bgVideo.muted = !isSoundOn;
+            }
+
+            // 3. Update UI
+            updateUI(isSoundOn);
+
+            // Haptic
+            if (isSoundOn && navigator.vibrate) navigator.vibrate(20);
+        });
+    }
+
+    // Attach listener to Profile Group as normal for GLOW effects
     const liquidHeader = document.querySelector('.liquid-header');
 
     // Make the entire header clickable for better UX
     if (liquidHeader) {
         liquidHeader.addEventListener('click', (e) => {
-            console.log('Header Clicked - Toggling Glow'); // DEBUG
-
             // Toggle Glow on Liquid Header (Top Container)
             liquidHeader.classList.toggle('glow-active');
 
@@ -129,7 +224,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (spineBig) spineBig.classList.toggle('glow-active');
             if (spineSmall) spineSmall.classList.toggle('glow-active');
 
-            // Toggle glow on ALL groups (including profile group if not already handled by parent)
+            // Toggle glow on ALL groups
             groups.forEach(group => group.classList.toggle('glow-active'));
 
             // Haptic feedback
