@@ -26,48 +26,27 @@ body {
     color: var(--text-primary);
     font-family: var(--font-main);
     overflow-x: hidden;
-    min-height: 100vh;
+    height: 100vh;
+    /* Force single screen height */
+    min-height: 100dvh;
+    /* Mobile friendly */
     display: flex;
     flex-direction: column;
-    /* Stack header and content */
-    justify-content: flex-start;
-    /* Start from top */
+    justify-content: space-between;
+    /* Distribute header and content */
     align-items: center;
 }
 
-/* .../* Background Video */
-#bg-video {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    /* Fit within the screen without cropping */
-    width: 100%;
-    height: 100%;
-    z-index: -2;
-    object-fit: contain;
-    /* SHOWS FULL VIDEO (No Crop) */
-    transform: translate(-50%, -50%);
-    /* Cosmic Orange Filter Chain */
-    filter: sepia(100%) hue-rotate(-20deg) saturate(300%) contrast(1.2) brightness(0.8);
-}
-
-/* Video Overlay (Darken + Tint for Text Readability) */
-#video-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(20, 5, 0, 0.8));
-    z-index: -1;
-    pointer-events: none;
-}
+/* ... */
 
 /* Liquid Glass Header */
 .liquid-header {
     width: 100%;
-    /* max-width: 600px;  Centered column look */
-    height: 45vh;
+    height: auto;
+    /* Allow content to dictate height */
+    padding: 3rem 1rem 4rem;
+    /* Top padding + Bottom padding for curve space */
+
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -79,12 +58,7 @@ body {
     /* NEON WIREFRAME BORDER */
     border: 1px solid rgba(255, 112, 67, 0.6);
     border-top: none;
-    /* Keep open top or seamless? Let's add full border since it's "container" */
-    /* Actually usually header touches top, so border-top might look weird if flush. 
-       But user said "container which holds...", implies a contained look? 
-       Let's stick to the curve shape primarily. */
     border-bottom: 2px solid var(--accent-primary);
-    /* Stronger bottom definition */
     border-left: 1px solid rgba(255, 112, 67, 0.3);
     border-right: 1px solid rgba(255, 112, 67, 0.3);
 
@@ -92,50 +66,35 @@ body {
     margin-bottom: 0;
     position: relative;
     z-index: 10;
+    flex-shrink: 0;
+    /* Don't shrink */
 
     /* NEON GLOW */
     box-shadow:
         0 4px 30px rgba(0, 0, 0, 0.5),
-        /* Depth */
         0 0 15px rgba(255, 112, 67, 0.4),
-        /* Outer Neon */
         inset 0 0 20px rgba(255, 112, 67, 0.1);
-    /* Inner Glow */
 
     overflow: hidden;
-    /* Clip inner content at rounded corners */
 }
 
-/* Add a liquid reflection sheen */
-.liquid-header::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, transparent 40%);
-    pointer-events: none;
-}
-
-.profile-header {
-    text-align: center;
-    position: relative;
-    z-index: 10;
-    width: 100%;
-    max-width: 480px;
-    /* Constrain content width inside header */
-}
+/* ... */
 
 .container {
     width: 100%;
     max-width: 480px;
-    padding: 1rem 2rem 2rem;
-    /* Adjusted top padding */
+    padding: 0 2rem 2rem;
+    /* Remove top padding, pushed by header */
+    height: 100%;
+    flex-grow: 1;
+    /* Fill remaining space */
+
     position: relative;
     z-index: 1;
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    /* Center content vertically in remaining space */
     gap: 1.5rem;
 }
 
@@ -462,18 +421,19 @@ h1 {
 
 @media (max-width: 480px) {
     .liquid-header {
-        height: 52vh;
-        /* Slightly more on mobile for breathing room */
+        height: auto;
+        padding: 2.5rem 1rem 3rem;
+        /* Tighter mobile padding */
         border-radius: 0 0 40px 40px;
     }
 
     .container {
-        padding: 1.5rem 1rem 3rem;
-        /* Add bottom padding for scroll */
+        padding: 0 1rem 1rem;
+        /* No top padding */
         gap: 0.8rem;
         height: auto;
-        /* Allow flow */
-        justify-content: flex-start;
+        flex-grow: 1;
+        justify-content: center;
     }
 
     .profile-header {
