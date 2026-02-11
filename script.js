@@ -128,8 +128,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const soundWaves = document.getElementById('sound-waves');
     const bgVideo = document.getElementById('bg-video');
 
-    // State Tracking - Default to ON
-    let isSoundOn = true;
+    // State Tracking - Default to OFF to ensure Video Autoplays
+    let isSoundOn = false;
 
     // Helper to update UI
     const updateUI = (active) => {
@@ -144,41 +144,31 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Initialize - Attempt Autoplay
-    updateUI(true); // Show as ON immediately
+    // Initialize - OFF (Video plays muted)
+    updateUI(false);
 
-    // Try to play immediately (might be blocked)
-    const tryAutoplay = async () => {
-        try {
-            await audioSystem.toggleSound(true);
-            if (bgVideo) bgVideo.muted = false;
-            console.log("Autoplay success");
-        } catch (e) {
-            console.log("Autoplay blocked, waiting for interaction");
-            // If blocked, we are technically "off" until interaction, strictly speaking
-            // But we keep UI "ON" to show intent, catch first click
-        }
-    };
-
-    tryAutoplay();
-
-    // Global Unlocker - Ensures sound starts on first interaction if autoplay failed
-    // Or if user just interacts with the page in general
+    // Global Unlocker - "Auto On" behavior on first interaction
+    // This satisfies the user desire for sound without breaking the video
     const unlockHandler = () => {
-        if (isSoundOn) {
-            audioSystem.context.resume().then(() => {
-                if (audioSystem.isLoaded && !audioSystem.sourceNode) {
-                    audioSystem.play();
-                    audioSystem.fadeIn();
-                }
-            });
+        // Only trigger if we haven't enabled sound yet
+        if (!isSoundOn) {
+            isSoundOn = true;
+            updateUI(true);
+
+            // Start Audio
+            audioSystem.toggleSound(true);
+
+            // Unmute Video
             if (bgVideo) bgVideo.muted = false;
         }
+
+        // Remove listeners after first successful activation
         document.removeEventListener('click', unlockHandler);
         document.removeEventListener('touchstart', unlockHandler);
         document.removeEventListener('keydown', unlockHandler);
     };
 
+    // Listen for ANY interaction to start sound
     document.addEventListener('click', unlockHandler);
     document.addEventListener('touchstart', unlockHandler);
     document.addEventListener('keydown', unlockHandler);
@@ -187,8 +177,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Toggle Handler
     if (soundBtn) {
         soundBtn.addEventListener('click', (e) => {
-            e.stopPropagation(); // Don't trigger the global unlocker twice if clicking this
+            e.stopPropagation(); // Prevent bubbling to global if handled here
 
+            // If user clicks toggle manually, we switch state
             isSoundOn = !isSoundOn;
 
             // 1. Toggle Audio Engine
@@ -204,6 +195,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Haptic
             if (isSoundOn && navigator.vibrate) navigator.vibrate(20);
+
+            // Also remove global listeners since user manually took control
+            document.removeEventListener('click', unlockHandler);
+            document.removeEventListener('touchstart', unlockHandler);
+            document.removeEventListener('keydown', unlockHandler);
         });
     }
 
