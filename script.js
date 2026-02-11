@@ -30,8 +30,6 @@ class QuantumAudio {
             chirp.start();
             chirp.stop(this.context.currentTime + 0.1); // Short blip
 
-            window.aCtx = this.context; // Expose for debug
-
             // Layer 1: Foundation
             this.createOscillator(this.baseFreq, 'sine', 0, 0.5);
 
@@ -95,9 +93,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const startAudioInteraction = (e) => {
         if (audioInitialized) return;
-
-        // VISUAL DEBUG: Immediate feedback on interaction
-        document.body.classList.add('sound-active');
 
         // This runs strictly on user tap/click
         audioSystem.init();
