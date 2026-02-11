@@ -583,43 +583,58 @@ h1 {
     }
 }
 
-/* Sound Toggle Button */
-.sound-toggle-btn {
+/* --- FOOTER / ORGANIZATION --- */
+.organization-group {
     position: fixed;
-    bottom: 2rem;
-    right: 2rem;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(10px);
-    border: 1px solid var(--glass-border);
-    color: var(--accent-primary);
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 300px;
+    padding: 20px;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    cursor: pointer;
-    z-index: 100;
+    gap: 15px;
+    z-index: 10;
+}
+
+.org-name {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--primary-color);
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px rgba(255, 107, 0, 0.5);
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+/* --- CYBER BUTTON --- */
+.cyber-button {
+    position: relative;
+    padding: 12px 30px;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 107, 0, 0.3);
+    border-radius: 30px;
+    color: var(--text-color);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    text-decoration: none;
+    overflow: hidden;
     transition: all 0.3s ease;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    width: 100%;
+    text-align: center;
+    box-sizing: border-box;
 }
 
-.sound-toggle-btn:hover {
-    background: var(--accent-primary);
-    color: var(--bg-color);
-    box-shadow: 0 0 20px var(--accent-glow);
-    transform: scale(1.1);
+.cyber-button:hover {
+    background: rgba(255, 107, 0, 0.1);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 20px rgba(255, 107, 0, 0.2);
+    transform: translateY(-2px);
 }
 
-.sound-toggle-btn.active {
-    background: rgba(255, 112, 67, 0.2);
-    border-color: var(--accent-primary);
-    box-shadow: 0 0 15px var(--accent-glow);
-}
-
-.sound-toggle-btn svg {
-    width: 24px;
-    height: 24px;
-    stroke: currentColor;
-    fill: none;
+.cyber-button:active {
+    transform: translateY(0);
 }
