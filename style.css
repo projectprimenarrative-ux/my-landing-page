@@ -68,8 +68,6 @@ body {
     width: 100%;
     /* max-width: 600px;  Centered column look */
     height: 45vh;
-    /* Reduced from 50vh */
-    /* Covers half the page */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -77,15 +75,33 @@ body {
     background: radial-gradient(circle at center, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.00) 100%);
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+    /* NEON WIREFRAME BORDER */
+    border: 1px solid rgba(255, 112, 67, 0.6);
+    border-top: none;
+    /* Keep open top or seamless? Let's add full border since it's "container" */
+    /* Actually usually header touches top, so border-top might look weird if flush. 
+       But user said "container which holds...", implies a contained look? 
+       Let's stick to the curve shape primarily. */
+    border-bottom: 2px solid var(--accent-primary);
+    /* Stronger bottom definition */
+    border-left: 1px solid rgba(255, 112, 67, 0.3);
+    border-right: 1px solid rgba(255, 112, 67, 0.3);
+
     border-radius: 0 0 50% 20%;
-    /* Elliptical Curve - Smoother Liquid Look */
     margin-bottom: 0;
-    /* Flush with content */
     position: relative;
     z-index: 10;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    /* Deep shadow depth */
+
+    /* NEON GLOW */
+    box-shadow:
+        0 4px 30px rgba(0, 0, 0, 0.5),
+        /* Depth */
+        0 0 15px rgba(255, 112, 67, 0.4),
+        /* Outer Neon */
+        inset 0 0 20px rgba(255, 112, 67, 0.1);
+    /* Inner Glow */
+
     overflow: hidden;
     /* Clip inner content at rounded corners */
 }
@@ -125,8 +141,9 @@ body {
 
 /* JWST Wireframe Container */
 .illustration-container {
-    width: 140px;
-    height: 140px;
+    width: 100px;
+    /* Reduced from 140px */
+    height: 100px;
     margin: 0 auto 1.5rem;
     position: relative;
     display: flex;
@@ -468,9 +485,10 @@ h1 {
 
     /* Illustration Size */
     .illustration-container {
-        width: 160px;
-        height: 160px;
-        margin-bottom: 1rem;
+        width: 80px;
+        /* Reduced to Small */
+        height: 80px;
+        margin-bottom: 0.5rem;
     }
 
     .illustration-container svg {
