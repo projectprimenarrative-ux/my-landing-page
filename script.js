@@ -34,16 +34,13 @@ class QuantumAudio {
             // Force Resume
             if (this.context.state === 'suspended') {
                 this.context.resume().then(() => {
-                    logDebug('Context Resumed Success!');
                 });
             }
 
-            logDebug(`Init complete. State: ${this.context.state}`);
             this.fadeIn();
 
         } catch (e) {
             console.error('Web Audio Error:', e);
-            logDebug(`Error: ${e.message}`);
         }
     }
 
@@ -54,7 +51,6 @@ class QuantumAudio {
         source.buffer = buffer;
         source.connect(this.context.destination);
         source.start(0);
-        logDebug('Silent buffer played to unlock');
     }
 
     createOscillator(freq, type, detune, vol) {
@@ -83,18 +79,6 @@ class QuantumAudio {
     }
 }
 
-// Visual Debugger
-function logDebug(msg) {
-    let debugBox = document.getElementById('debug-log');
-    if (!debugBox) {
-        debugBox = document.createElement('div');
-        debugBox.id = 'debug-log';
-        debugBox.style.cssText = 'position:fixed; top:0; left:0; width:100%; background:rgba(0,0,0,0.8); color:#0f0; font-family:monospace; font-size:10px; z-index:9999; padding:5px; pointer-events:none;';
-        document.body.appendChild(debugBox);
-    }
-    debugBox.innerHTML = msg + '<br>' + debugBox.innerHTML;
-}
-
 // --- Interaction Logic ---
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -104,8 +88,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const startAudioInteraction = (e) => {
         if (audioInitialized) return;
-
-        logDebug(`Interaction detected: ${e.type}`);
 
         // This runs strictly on user tap/click
         audioSystem.init();
