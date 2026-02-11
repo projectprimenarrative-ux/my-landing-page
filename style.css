@@ -182,16 +182,30 @@ body.wireframe-active .corner-accents::after {
 /* Physical Spine Connector (The "Wire" between Header and Content) */
 .spine-connector {
     width: 2px;
-    height: 3rem;
-    /* Physical height acting as spacer */
+    height: 4rem;
+    /* Taller to bridge gap fully */
     background: var(--accent-primary);
-    margin: -1px auto 0;
-    /* Tiny negative margin to ensure seamless touch */
+    margin: -2.5rem auto -0.8rem;
+    /* Pull UP into Header, Pull content UP */
     box-shadow:
         0 0 10px var(--accent-primary),
         0 0 20px var(--accent-primary);
     z-index: 0;
     flex-shrink: 0;
+    opacity: 0.8;
+}
+
+.spine-connector-small {
+    width: 2px;
+    height: 1.5rem;
+    /* Short link between boxes */
+    background: var(--accent-primary);
+    margin: -0.5rem auto -0.5rem;
+    /* Overlap both slightly */
+    box-shadow: 0 0 8px var(--accent-primary);
+    z-index: 0;
+    flex-shrink: 0;
+    opacity: 0.6;
 }
 
 @keyframes wireframe-pulse {
