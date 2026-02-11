@@ -23,6 +23,7 @@ class QuantumAudio {
             this.createOscillator(this.baseFreq * 1.5, 'sine', 0.1); // Perfect Fifth (Stability)
             this.createOscillator(this.baseFreq * 0.5, 'triangle', 0.05); // Sub-Octave (Groundedness)
 
+            this.isPlaying = true;
             console.log('Quantum Audio Initialized');
         } catch (e) {
             console.error('Web Audio API not supported:', e);
@@ -46,58 +47,39 @@ class QuantumAudio {
         this.oscillators.push({ osc, gain });
     }
 
-    toggle() {
-        if (!this.context) this.init(); // Initialize on first user gesture
+    start() {
+        if (!this.context) this.init();
 
         if (this.context.state === 'suspended') {
             this.context.resume();
         }
 
-        if (this.isPlaying) {
-            this.fadeOut();
-        } else {
-            this.fadeIn();
-        }
-        this.isPlaying = !this.isPlaying;
-        return this.isPlaying;
-    }
-
-    fadeIn() {
+        // Fade In
         const now = this.context.currentTime;
         this.masterGain.gain.cancelScheduledValues(now);
         this.masterGain.gain.setValueAtTime(this.masterGain.gain.value, now);
-        this.masterGain.gain.exponentialRampToValueAtTime(0.3, now + 2); // Fade in over 2s
-    }
-
-    fadeOut() {
-        const now = this.context.currentTime;
-        this.masterGain.gain.cancelScheduledValues(now);
-        this.masterGain.gain.setValueAtTime(this.masterGain.gain.value, now);
-        this.masterGain.gain.exponentialRampToValueAtTime(0.001, now + 1); // Fade out over 1s
+        this.masterGain.gain.exponentialRampToValueAtTime(0.2, now + 4); // Slow fade to 20%
+        console.log('Audio Starting...');
     }
 }
 
 // --- Interaction Logic ---
 document.addEventListener('DOMContentLoaded', () => {
-    // Audio System
+    // Audio System - Auto-Start on First Interaction
     const audioSystem = new QuantumAudio();
-    const soundToggle = document.getElementById('sound-toggle');
 
-    if (soundToggle) {
-        soundToggle.addEventListener('click', (e) => {
-            e.stopPropagation(); // Don't trigger other clicks
-            const isNowPlaying = audioSystem.toggle();
+    const startAudio = () => {
+        audioSystem.start();
+        // Remove listeners once started
+        document.removeEventListener('click', startAudio);
+        document.removeEventListener('touchstart', startAudio);
+        document.removeEventListener('scroll', startAudio);
+    };
 
-            if (isNowPlaying) {
-                soundToggle.classList.add('active');
-            } else {
-                soundToggle.classList.remove('active');
-            }
-
-            // Haptic Feedback for the physical switch feel
-            if (navigator.vibrate) navigator.vibrate(20);
-        });
-    }
+    // Listen for ANY user interaction to trigger sound
+    document.addEventListener('click', startAudio);
+    document.addEventListener('touchstart', startAudio);
+    document.addEventListener('scroll', startAudio);
 
     // Attach listener to Profile Group (Name Container)
     const profileGroup = document.querySelector('.profile-group');
