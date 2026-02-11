@@ -167,11 +167,11 @@ body {
 
 /* Profile Group (Name & Title Inner Container) */
 .profile-group {
-    background: transparent;
-    /* Removed gradient square */
-    border: none;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
     padding: 0.5rem;
-    /* Reduced padding */
     gap: 0.2rem;
     text-align: center;
     cursor: pointer;
@@ -213,18 +213,6 @@ body.wireframe-active .corner-accents::after {
     100% {
         border-color: rgba(255, 112, 67, 0.8);
         box-shadow: 0 0 20px rgba(255, 112, 67, 0.2);
-    }
-}
-
-@media (max-width: 480px) {
-
-    /* ... existing mobile styles ... */
-    /* Illustration Size */
-    .illustration-container {
-        width: 60px;
-        /* Reduced to Tiny for fit */
-        height: 60px;
-        margin-bottom: 0.2rem;
     }
 }
 
@@ -494,9 +482,9 @@ h1 {
 
     /* Illustration Size */
     .illustration-container {
-        width: 80px;
-        /* Reduced to Small */
-        height: 80px;
+        width: 120px;
+        /* Restored to Big */
+        height: 120px;
         margin-bottom: 0.5rem;
     }
 
