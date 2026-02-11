@@ -19,25 +19,28 @@ class QuantumAudio {
             this.masterGain.gain.setValueAtTime(0, this.context.currentTime);
             this.masterGain.connect(this.context.destination);
 
-            // Layer 1: Foundation (Mid-Low)
-            this.createOscillator(this.baseFreq, 'sine', 0, 0.2);
+            // Layer 1: Foundation (Mid-Low) - SAWTOOTH for max visibility
+            this.createOscillator(this.baseFreq, 'sawtooth', 0, 0.3);
 
-            // Layer 2: Harmony (Perfect Fifth)
-            this.createOscillator(this.baseFreq * 1.5, 'sine', 0.1, 0.15);
+            // Layer 2: Harmony (Perfect Fifth) - SQUARE for buzz
+            this.createOscillator(this.baseFreq * 1.5, 'square', 0.1, 0.2);
 
-            // Layer 3: High Sparkle (Guaranteed Audibility)
-            this.createOscillator(this.baseFreq * 2, 'triangle', 0.05, 0.05);
+            // Layer 3: High Sparkle - TRIANGLE
+            this.createOscillator(this.baseFreq * 2, 'triangle', 0.05, 0.2);
 
             // Force Resume for good measure
             if (this.context.state === 'suspended') {
-                this.context.resume();
+                this.context.resume().then(() => {
+                    logDebug('Context Resumed via Resume()');
+                });
             }
 
-            console.log('Audio Context Created & Resumed');
+            logDebug(`Audio Initialized. State: ${this.context.state}`);
             this.fadeIn();
 
         } catch (e) {
             console.error('Web Audio Error:', e);
+            logDebug(`Error: ${e.message}`);
         }
     }
 
@@ -67,6 +70,18 @@ class QuantumAudio {
     }
 }
 
+// Visual Debugger
+function logDebug(msg) {
+    let debugBox = document.getElementById('debug-log');
+    if (!debugBox) {
+        debugBox = document.createElement('div');
+        debugBox.id = 'debug-log';
+        debugBox.style.cssText = 'position:fixed; top:0; left:0; width:100%; background:rgba(0,0,0,0.8); color:#0f0; font-family:monospace; font-size:10px; z-index:9999; padding:5px; pointer-events:none;';
+        document.body.appendChild(debugBox);
+    }
+    debugBox.innerHTML = msg + '<br>' + debugBox.innerHTML;
+}
+
 // --- Interaction Logic ---
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -74,15 +89,14 @@ document.addEventListener('DOMContentLoaded', () => {
     let audioInitialized = false;
     const audioSystem = new QuantumAudio();
 
-    const startAudioInteraction = () => {
+    const startAudioInteraction = (e) => {
         if (audioInitialized) return;
+
+        logDebug(`Interaction detected: ${e.type}`);
 
         // This runs strictly on user tap/click
         audioSystem.init();
         audioInitialized = true;
-
-        // Visual Feedback for Debugging (Optional: Remove later)
-        console.log('User Interacted - Audio Starting');
 
         // Clean up listeners
         document.removeEventListener('click', startAudioInteraction);
