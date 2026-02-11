@@ -4,10 +4,15 @@
 
 // Attach listener to Profile Group (Name Container)
 const profileGroup = document.querySelector('.profile-group');
-if (profileGroup) {
+const liquidHeader = document.querySelector('.liquid-header');
+
+if (profileGroup && liquidHeader) {
     profileGroup.addEventListener('click', (e) => {
-        // Toggle Wireframe Animation on Body
-        document.body.classList.toggle('wireframe-active');
+        // Toggle Glow on Liquid Header (Top Container)
+        liquidHeader.classList.toggle('glow-active');
+
+        // Also toggle body wireframe for global effect (optional, keeping for now)
+        // document.body.classList.toggle('wireframe-active'); 
 
         // Optional: Add haptic feedback if supported
         if (navigator.vibrate) navigator.vibrate(50);
