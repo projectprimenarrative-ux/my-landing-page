@@ -19,29 +19,42 @@ class QuantumAudio {
             this.masterGain.gain.setValueAtTime(0, this.context.currentTime);
             this.masterGain.connect(this.context.destination);
 
-            // Layer 1: Foundation (Mid-Low) - SAWTOOTH for max visibility
-            this.createOscillator(this.baseFreq, 'sawtooth', 0, 0.3);
+            // FORCE UNLOCK: Play silent buffer to wake up iOS/Android Audio Threads
+            this.unlockAudio();
 
-            // Layer 2: Harmony (Perfect Fifth) - SQUARE for buzz
-            this.createOscillator(this.baseFreq * 1.5, 'square', 0.1, 0.2);
+            // Layer 1: Foundation (Mid-Low) - Back to Pleasant Sine
+            this.createOscillator(this.baseFreq, 'sine', 0, 0.4);
 
-            // Layer 3: High Sparkle - TRIANGLE
-            this.createOscillator(this.baseFreq * 2, 'triangle', 0.05, 0.2);
+            // Layer 2: Harmony (Perfect Fifth) - Sine
+            this.createOscillator(this.baseFreq * 1.5, 'sine', 0.1, 0.2);
 
-            // Force Resume for good measure
+            // Layer 3: High Sparkle - Triangle (Audible but soft)
+            this.createOscillator(this.baseFreq * 2, 'triangle', 0.05, 0.1);
+
+            // Force Resume
             if (this.context.state === 'suspended') {
                 this.context.resume().then(() => {
-                    logDebug('Context Resumed via Resume()');
+                    logDebug('Context Resumed Success!');
                 });
             }
 
-            logDebug(`Audio Initialized. State: ${this.context.state}`);
+            logDebug(`Init complete. State: ${this.context.state}`);
             this.fadeIn();
 
         } catch (e) {
             console.error('Web Audio Error:', e);
             logDebug(`Error: ${e.message}`);
         }
+    }
+
+    unlockAudio() {
+        // Create an empty three-second buffer at the sample rate of the AudioContext
+        const buffer = this.context.createBuffer(1, 1, 22050);
+        const source = this.context.createBufferSource();
+        source.buffer = buffer;
+        source.connect(this.context.destination);
+        source.start(0);
+        logDebug('Silent buffer played to unlock');
     }
 
     createOscillator(freq, type, detune, vol) {
