@@ -30,11 +30,10 @@ body {
     min-height: 100dvh;
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
-    /* Distribute items evenly (Top/Bottom balance) */
+    justify-content: flex-start;
+    /* FORCE TOP ALIGNMENT (No space above) */
     align-items: center;
-    padding-bottom: 2rem;
-    /* Safety pad */
+    padding-bottom: 0;
 }
 
 /* Background Video */
@@ -59,8 +58,8 @@ body {
     width: 100%;
     height: auto;
     /* Natural Height */
-    padding: 4rem 1rem 5rem;
-    /* Spacious padding for curve */
+    padding: 3.5rem 1rem 4rem;
+    /* Top padding for breathing room/status bar */
 
     display: flex;
     flex-direction: column;
@@ -437,10 +436,10 @@ h1 {
 @media (max-width: 480px) {
     .liquid-header {
         height: auto;
-        padding: 0.5rem 1rem 2rem;
-        /* Minimized top padding to pull logo up */
+        padding: 2.5rem 1rem 3rem;
+        /* Adjusted for mobile top spacing */
         border-radius: 0 0 40px 40px;
-        flex-shrink: 1;
+        flex-shrink: 0;
     }
 
     /* ... */
