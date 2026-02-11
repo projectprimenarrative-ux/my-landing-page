@@ -117,25 +117,19 @@
 
     </div>
 
-    <!-- ORGANIZATION / FOOTER (Bottom 25%) -->
-    <div class="organization-group group-container">
-        <div class="corner-accents">
-            <span class="corner top-left"></span>
-            <span class="corner top-right"></span>
-            <span class="corner bottom-left"></span>
-            <span class="corner bottom-right"></span>
-        </div>
-        <div class="label">LEADERSHIP</div>
-        <div class="org-name">ORGANIZATION // PRIME DIRECTIVE</div>
-        <a href="https://primedirective.tech" target="_blank" class="cyber-button primary-btn"
-            onclick="if(navigator.vibrate) navigator.vibrate(20);">
-            <span class="btn-content">VISIT WEBSITE</span>
-            <div class="glitch-effect"></div>
-        </a>
-    </div>
+    <!-- Sound Toggle Button -->
+    <button id="sound-toggle" class="sound-toggle-btn" aria-label="Toggle Sound">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="icon-svg">
+            <path id="speaker-icon" d="M11 5L6 9H2V15H6L11 19V5Z" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" />
+            <path id="sound-waves" d="M15.54 8.46a5 5 0 0 1 0 7.07" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" style="opacity: 0; transition: opacity 0.3s;" />
+        </svg>
+    </button>
 
-    <!-- Scripts -->
-    <script src="script.js"></script>
+
+    <!-- FORCE NEW VERSION -->
+    <script src="script.js?v=9"></script>
 </body>
 
 </html>
