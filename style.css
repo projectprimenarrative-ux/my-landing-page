@@ -195,6 +195,8 @@ body.wireframe-active .corner-accents::after {
     z-index: 0;
     flex-shrink: 0;
     opacity: 0.8;
+    pointer-events: none;
+    /* KEY FIX: Don't steal clicks */
 }
 
 .spine-connector-small {
@@ -208,6 +210,8 @@ body.wireframe-active .corner-accents::after {
     z-index: 0;
     flex-shrink: 0;
     opacity: 0.6;
+    pointer-events: none;
+    /* KEY FIX: Don't steal clicks */
 }
 
 /* Active Glow States for Spines */
