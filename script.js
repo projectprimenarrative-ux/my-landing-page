@@ -15,29 +15,31 @@ class QuantumAudio {
             const AudioContext = window.AudioContext || window.webkitAudioContext;
             this.context = new AudioContext();
 
+            // Master Volume - Set DIRECTLY (No Ramps to avoid timing bugs)
             this.masterGain = this.context.createGain();
-            this.masterGain.gain.setValueAtTime(0, this.context.currentTime);
+            this.masterGain.gain.setValueAtTime(0.5, this.context.currentTime);
             this.masterGain.connect(this.context.destination);
 
-            // FORCE UNLOCK: Play silent buffer to wake up iOS/Android Audio Threads
+            // FORCE UNLOCK
             this.unlockAudio();
 
-            // Layer 1: Foundation (Mid-Low) - Back to Pleasant Sine
-            this.createOscillator(this.baseFreq, 'sine', 0, 0.4);
+            // STARTUP CHIRP (Verification Sound)
+            const chirp = this.context.createOscillator();
+            chirp.frequency.setValueAtTime(880, this.context.currentTime); // High A5
+            chirp.connect(this.masterGain);
+            chirp.start();
+            chirp.stop(this.context.currentTime + 0.1); // Short blip
 
-            // Layer 2: Harmony (Perfect Fifth) - Sine
-            this.createOscillator(this.baseFreq * 1.5, 'sine', 0.1, 0.2);
+            // Layer 1: Foundation
+            this.createOscillator(this.baseFreq, 'sine', 0, 0.5);
 
-            // Layer 3: High Sparkle - Triangle (Audible but soft)
-            this.createOscillator(this.baseFreq * 2, 'triangle', 0.05, 0.1);
+            // Layer 2: Harmony
+            this.createOscillator(this.baseFreq * 1.5, 'triangle', 0.1, 0.2);
 
             // Force Resume
             if (this.context.state === 'suspended') {
-                this.context.resume().then(() => {
-                });
+                this.context.resume();
             }
-
-            this.fadeIn();
 
         } catch (e) {
             console.error('Web Audio Error:', e);
