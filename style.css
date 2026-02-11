@@ -35,15 +35,30 @@ body {
     align-items: center;
 }
 
-/* ... Background Canvas ... */
-#quantum-canvas {
+/* .../* Background Video */
+#bg-video {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: -2;
+    object-fit: cover;
+}
+
+/* Video Overlay (Darken for Text Readability) */
+#video-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    /* Adjust opacity as needed */
     z-index: -1;
-    opacity: 0.8;
+    pointer-events: none;
 }
 
 /* Liquid Glass Header */
@@ -60,8 +75,8 @@ body {
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 0 0 50px 50px;
-    /* Big rounded glass bottom */
+    border-radius: 0 0 50% 20%;
+    /* Elliptical Curve - Smoother Liquid Look */
     margin-bottom: 0;
     /* Flush with content */
     position: relative;
@@ -123,7 +138,8 @@ body {
 
 /* Profile Group (Name & Title Inner Container) */
 .profile-group {
-    background: linear-gradient(135deg, rgba(255, 112, 67, 0.05) 0%, transparent 100%);
+    /* FLIPPED GRADIENT: Now flows from Right/Bottom to Left/Top */
+    background: linear-gradient(225deg, rgba(255, 112, 67, 0.05) 0%, transparent 100%);
     border: 1px solid rgba(255, 112, 67, 0.1);
     padding: 1rem;
     gap: 0.2rem;
