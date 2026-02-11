@@ -5,7 +5,7 @@ class QuantumAudio {
         this.masterGain = null;
         this.oscillators = [];
         this.isPlaying = false;
-        this.baseFreq = 110; // A2 (Deep Drone)
+        this.baseFreq = 130.81; // C3 (Higher than A2 for phone speakers)
     }
 
     init() {
@@ -50,16 +50,20 @@ class QuantumAudio {
     start() {
         if (!this.context) this.init();
 
+        console.log('Audio Start Triggered. State:', this.context.state);
+
         if (this.context.state === 'suspended') {
-            this.context.resume();
+            this.context.resume().then(() => {
+                console.log('Audio Context Resumed. New State:', this.context.state);
+            });
         }
 
         // Fade In
         const now = this.context.currentTime;
         this.masterGain.gain.cancelScheduledValues(now);
         this.masterGain.gain.setValueAtTime(this.masterGain.gain.value, now);
-        this.masterGain.gain.exponentialRampToValueAtTime(0.2, now + 4); // Slow fade to 20%
-        console.log('Audio Starting...');
+        this.masterGain.gain.linearRampToValueAtTime(0.5, now + 2); // Louder (0.5), Faster Fade (2s)
+        console.log('Audio Fading In...');
     }
 }
 
