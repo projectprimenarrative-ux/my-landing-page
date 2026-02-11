@@ -448,10 +448,10 @@ h1 {
     .container {
         height: 58vh;
         /* Fixed proportion: Bottom 58% */
-        padding: 0 1.5rem 1rem;
+        padding: 0 1.5rem 0.5rem;
         gap: 0.5rem;
-        justify-content: space-evenly;
-        /* Distribute buttons evenly */
+        justify-content: center;
+        /* Group centers */
         overflow-y: hidden;
         /* Prevent scroll if possible */
     }
@@ -496,12 +496,12 @@ h1 {
     }
 
     .link-card {
-        padding: 0.7rem 1rem;
+        padding: 0.6rem 1rem;
         font-size: 0.8rem;
     }
 
     .action-btn {
-        padding: 0.7rem;
+        padding: 0.6rem;
         font-size: 0.75rem;
     }
 
