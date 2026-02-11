@@ -30,11 +30,18 @@ class QuantumAudio {
             chirp.start();
             chirp.stop(this.context.currentTime + 0.1); // Short blip
 
+            // VISUAL CONFIRMATION: Turn screen edges Green
+            document.body.classList.add('sound-active');
+            window.aCtx = this.context; // Expose for debug
+
             // Layer 1: Foundation
             this.createOscillator(this.baseFreq, 'sine', 0, 0.5);
 
             // Layer 2: Harmony
             this.createOscillator(this.baseFreq * 1.5, 'triangle', 0.1, 0.2);
+
+            // Layer 3: High Sparkle (Continuous High Pitch to Guarantee Audibility)
+            this.createOscillator(this.baseFreq * 2, 'triangle', 0.05, 0.15);
 
             // Force Resume
             if (this.context.state === 'suspended') {
