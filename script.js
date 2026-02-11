@@ -4,41 +4,52 @@ class QuantumAudio {
         this.context = null;
         this.masterGain = null;
         this.oscillators = [];
-        this.isPlaying = false;
-        this.baseFreq = 130.81; // C3 (Higher than A2 for phone speakers)
+        this.baseFreq = 220; // A3 (Standard mid-range)
     }
 
     init() {
-        if (this.context) return;
+        if (this.context) return; // Already running
 
         try {
+            // Create Context strictly inside the user action
             const AudioContext = window.AudioContext || window.webkitAudioContext;
             this.context = new AudioContext();
+
             this.masterGain = this.context.createGain();
-            this.masterGain.gain.setValueAtTime(0, this.context.currentTime); // Start silent
+            this.masterGain.gain.setValueAtTime(0, this.context.currentTime);
             this.masterGain.connect(this.context.destination);
 
-            // Create "Quantum Chord" (Root, +4 cents, +7 cents for binaural beat)
-            this.createOscillator(this.baseFreq, 'sine', 0); // Fundamental
-            this.createOscillator(this.baseFreq * 1.5, 'sine', 0.1); // Perfect Fifth (Stability)
-            this.createOscillator(this.baseFreq * 0.5, 'triangle', 0.05); // Sub-Octave (Groundedness)
+            // Layer 1: Foundation (Mid-Low)
+            this.createOscillator(this.baseFreq, 'sine', 0, 0.2);
 
-            this.isPlaying = true;
-            console.log('Quantum Audio Initialized');
+            // Layer 2: Harmony (Perfect Fifth)
+            this.createOscillator(this.baseFreq * 1.5, 'sine', 0.1, 0.15);
+
+            // Layer 3: High Sparkle (Guaranteed Audibility)
+            this.createOscillator(this.baseFreq * 2, 'triangle', 0.05, 0.05);
+
+            // Force Resume for good measure
+            if (this.context.state === 'suspended') {
+                this.context.resume();
+            }
+
+            console.log('Audio Context Created & Resumed');
+            this.fadeIn();
+
         } catch (e) {
-            console.error('Web Audio API not supported:', e);
+            console.error('Web Audio Error:', e);
         }
     }
 
-    createOscillator(freq, type, detune) {
+    createOscillator(freq, type, detune, vol) {
         const osc = this.context.createOscillator();
         const gain = this.context.createGain();
 
         osc.type = type;
         osc.frequency.setValueAtTime(freq, this.context.currentTime);
-        osc.detune.setValueAtTime(detune * 100, this.context.currentTime); // Slight detune for "wave" effect
+        osc.detune.setValueAtTime(detune * 100, this.context.currentTime);
 
-        gain.gain.setValueAtTime(0.1, this.context.currentTime); // Low individual volume
+        gain.gain.setValueAtTime(vol, this.context.currentTime);
 
         osc.connect(gain);
         gain.connect(this.masterGain);
@@ -47,45 +58,44 @@ class QuantumAudio {
         this.oscillators.push({ osc, gain });
     }
 
-    start() {
-        if (!this.context) this.init();
-
-        console.log('Audio Start Triggered. State:', this.context.state);
-
-        if (this.context.state === 'suspended') {
-            this.context.resume().then(() => {
-                console.log('Audio Context Resumed. New State:', this.context.state);
-            });
-        }
-
-        // Fade In
+    fadeIn() {
+        if (!this.masterGain) return;
         const now = this.context.currentTime;
         this.masterGain.gain.cancelScheduledValues(now);
-        this.masterGain.gain.setValueAtTime(this.masterGain.gain.value, now);
-        this.masterGain.gain.linearRampToValueAtTime(0.5, now + 2); // Louder (0.5), Faster Fade (2s)
-        console.log('Audio Fading In...');
+        this.masterGain.gain.setValueAtTime(0, now);
+        this.masterGain.gain.linearRampToValueAtTime(0.5, now + 2); // 50% Volume in 2s
     }
 }
 
 // --- Interaction Logic ---
 document.addEventListener('DOMContentLoaded', () => {
-    // Audio System - Auto-Start on First Interaction
+
+    // ONE-TIME SETUP
+    let audioInitialized = false;
     const audioSystem = new QuantumAudio();
 
-    const startAudio = () => {
-        audioSystem.start();
-        // Remove listeners once started
-        document.removeEventListener('click', startAudio);
-        document.removeEventListener('touchstart', startAudio);
-        document.removeEventListener('scroll', startAudio);
+    const startAudioInteraction = () => {
+        if (audioInitialized) return;
+
+        // This runs strictly on user tap/click
+        audioSystem.init();
+        audioInitialized = true;
+
+        // Visual Feedback for Debugging (Optional: Remove later)
+        console.log('User Interacted - Audio Starting');
+
+        // Clean up listeners
+        document.removeEventListener('click', startAudioInteraction);
+        document.removeEventListener('touchstart', startAudioInteraction);
+        document.removeEventListener('keydown', startAudioInteraction);
     };
 
-    // Listen for ANY user interaction to trigger sound
-    document.addEventListener('click', startAudio);
-    document.addEventListener('touchstart', startAudio);
-    document.addEventListener('scroll', startAudio);
+    // Aggressive Listeners
+    document.addEventListener('click', startAudioInteraction);
+    document.addEventListener('touchstart', startAudioInteraction);
+    document.addEventListener('keydown', startAudioInteraction);
 
-    // Attach listener to Profile Group (Name Container)
+    // Attach listener to Profile Group as normal
     const profileGroup = document.querySelector('.profile-group');
     const liquidHeader = document.querySelector('.liquid-header');
 
