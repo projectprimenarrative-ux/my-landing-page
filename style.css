@@ -141,9 +141,9 @@ body {
 
 /* JWST Wireframe Container */
 .illustration-container {
-    width: 80px;
-    /* Reduced from 140px */
-    height: 80px;
+    width: 140px;
+    /* Restored to Large */
+    height: 140px;
     margin: 0 auto 1.5rem;
     position: relative;
     display: flex;
@@ -153,14 +153,16 @@ body {
     -webkit-tap-highlight-color: transparent;
 }
 
-/* Active Glow State for Liquid Header */
+/* Active Edge Lighting State for Liquid Header */
 .liquid-header.glow-active {
-    border-color: var(--accent-primary);
+    border-color: #FF7043;
+    /* Solid Cosmic Orange Border */
     box-shadow:
-        0 4px 50px rgba(0, 0, 0, 0.5),
-        0 0 30px var(--accent-primary),
-        inset 0 0 40px rgba(255, 112, 67, 0.4);
-    transition: all 0.3s ease;
+        0 0 20px var(--accent-primary),
+        /* Outer Edge Glow */
+        inset 0 0 20px var(--accent-primary);
+    /* Inner Edge Glow */
+    transition: all 0.2s ease-out;
 }
 
 /* Profile Group (Name & Title Inner Container) */
