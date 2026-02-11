@@ -8,6 +8,8 @@ const liquidHeader = document.querySelector('.liquid-header');
 
 if (profileGroup && liquidHeader) {
     profileGroup.addEventListener('click', (e) => {
+        console.log('Profile Clicked - Toggling Glow'); // DEBUG
+
         // Toggle Glow on Liquid Header (Top Container)
         liquidHeader.classList.toggle('glow-active');
 
@@ -16,12 +18,18 @@ if (profileGroup && liquidHeader) {
         const spineSmall = document.querySelector('.spine-connector-small');
         const groups = document.querySelectorAll('.group-container');
 
-        if (spineBig) spineBig.classList.toggle('glow-active');
-        if (spineSmall) spineSmall.classList.toggle('glow-active');
-        groups.forEach(group => group.classList.toggle('glow-active'));
-
-        // Optional: Body wireframe effect
-        // document.body.classList.toggle('wireframe-active'); 
+        if (spineBig) {
+            spineBig.classList.toggle('glow-active');
+            console.log('Toggled Big Spine');
+        }
+        if (spineSmall) {
+            spineSmall.classList.toggle('glow-active');
+            console.log('Toggled Small Spine');
+        }
+        groups.forEach(group => {
+            group.classList.toggle('glow-active');
+            console.log('Toggled Group');
+        });
 
         // Haptic feedback
         if (navigator.vibrate) navigator.vibrate(50);

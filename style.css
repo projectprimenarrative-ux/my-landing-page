@@ -211,26 +211,27 @@ body.wireframe-active .corner-accents::after {
 /* Active Glow States for Spines */
 .spine-connector.glow-active,
 .spine-connector-small.glow-active {
-    background: #FF7043;
+    background: #FF7043 !important;
     box-shadow:
         0 0 15px #FF7043,
-        0 0 30px #FF7043;
-    opacity: 1;
+        0 0 30px #FF7043 !important;
+    opacity: 1 !important;
     transition: all 0.2s ease-out;
 }
 
 /* Active Glow States for Bottom Containers */
 .group-container.glow-active {
-    border-color: rgba(255, 112, 67, 0.8);
+    border-color: #FF7043 !important;
+    /* Force Orange */
     box-shadow:
-        0 0 20px rgba(255, 112, 67, 0.2),
-        inset 0 0 20px rgba(255, 112, 67, 0.1);
+        0 0 20px rgba(255, 112, 67, 0.4),
+        inset 0 0 20px rgba(255, 112, 67, 0.2) !important;
 }
 
 .group-container.glow-active .corner-accents::before,
 .group-container.glow-active .corner-accents::after {
-    border-color: #FF7043;
-    box-shadow: 0 0 10px #FF7043;
+    border-color: #FF7043 !important;
+    box-shadow: 0 0 10px #FF7043 !important;
 }
 
 .illustration-container svg {
