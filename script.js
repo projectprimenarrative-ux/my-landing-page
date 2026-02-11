@@ -11,10 +11,19 @@ if (profileGroup && liquidHeader) {
         // Toggle Glow on Liquid Header (Top Container)
         liquidHeader.classList.toggle('glow-active');
 
-        // Also toggle body wireframe for global effect (optional, keeping for now)
+        // Toggle Glow on Spines and Bottom Containers (Synchronized Pulse)
+        const spineBig = document.querySelector('.spine-connector');
+        const spineSmall = document.querySelector('.spine-connector-small');
+        const groups = document.querySelectorAll('.group-container');
+
+        if (spineBig) spineBig.classList.toggle('glow-active');
+        if (spineSmall) spineSmall.classList.toggle('glow-active');
+        groups.forEach(group => group.classList.toggle('glow-active'));
+
+        // Optional: Body wireframe effect
         // document.body.classList.toggle('wireframe-active'); 
 
-        // Optional: Add haptic feedback if supported
+        // Haptic feedback
         if (navigator.vibrate) navigator.vibrate(50);
     });
 }
