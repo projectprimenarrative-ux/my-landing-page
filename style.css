@@ -141,19 +141,29 @@ body {
 .profile-group {
     /* FLIPPED GRADIENT: Now flows from Right/Bottom to Left/Top */
     background: linear-gradient(225deg, rgba(255, 112, 67, 0.05) 0%, transparent 100%);
-    border: 1px solid rgba(255, 112, 67, 0.1);
+    /* Border removed for cleaner look as requested */
+    border: none;
     padding: 1rem;
     gap: 0.2rem;
     text-align: center;
     border-radius: 20px;
-    /* Rounded corners as requested */
     cursor: pointer;
-    /* Now interactive */
     transition: all 0.3s ease;
 }
 
 .profile-group:active {
     transform: scale(0.98);
+}
+
+.quote {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-style: italic;
+    color: var(--text-primary);
+    margin-top: 0.5rem;
+    opacity: 0.9;
+    text-shadow: 0 0 10px var(--accent-glow);
+    letter-spacing: 0.5px;
 }
 
 /* Active Wireframe State - Applied to body */
