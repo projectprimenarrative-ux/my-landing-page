@@ -42,13 +42,12 @@ body {
     position: fixed;
     top: 50%;
     left: 50%;
-    width: 100vw;
-    /* Force Viewport Width */
-    height: 100dvh;
-    /* Force Dynamic Viewport Height */
+    /* Slight zoom to prevent any black bars */
+    width: 105vw;
+    height: 105dvh;
     z-index: -2;
-    object-fit: contain;
-    /* No Crop */
+    object-fit: cover;
+    /* EAT THE BARS */
     transform: translate(-50%, -50%);
     filter: sepia(100%) hue-rotate(-20deg) saturate(300%) contrast(1.2) brightness(0.8);
 }
