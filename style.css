@@ -38,14 +38,16 @@ body {
 /* .../* Background Video */
 #bg-video {
     position: fixed;
-    right: 0;
-    bottom: 0;
+    top: 50%;
+    left: 50%;
     min-width: 100%;
     min-height: 100%;
     width: auto;
     height: auto;
     z-index: -2;
     object-fit: cover;
+    transform: translate(-50%, -50%);
+    /* Centered Crop */
     /* Cosmic Orange Filter Chain */
     filter: sepia(100%) hue-rotate(-20deg) saturate(300%) contrast(1.2) brightness(0.8);
 }
@@ -66,7 +68,8 @@ body {
 .liquid-header {
     width: 100%;
     /* max-width: 600px;  Centered column look */
-    height: 50vh;
+    height: 45vh;
+    /* Reduced from 50vh */
     /* Covers half the page */
     display: flex;
     flex-direction: column;
