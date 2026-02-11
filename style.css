@@ -90,6 +90,8 @@ body {
         inset 0 0 20px rgba(255, 112, 67, 0.1);
 
     overflow: hidden;
+    cursor: pointer;
+    /* Whole header is interactive now */
 }
 
 /* ... */

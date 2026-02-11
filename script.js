@@ -1,40 +1,36 @@
 // Video Background Mode - Simplified Script
 
-// --- Interaction Logic ---
+document.addEventListener('DOMContentLoaded', () => {
+    // --- Interaction Logic ---
 
-// Attach listener to Profile Group (Name Container)
-const profileGroup = document.querySelector('.profile-group');
-const liquidHeader = document.querySelector('.liquid-header');
+    // Attach listener to Profile Group (Name Container)
+    const profileGroup = document.querySelector('.profile-group');
+    const liquidHeader = document.querySelector('.liquid-header');
 
-if (profileGroup && liquidHeader) {
-    profileGroup.addEventListener('click', (e) => {
-        console.log('Profile Clicked - Toggling Glow'); // DEBUG
+    // Make the entire header clickable for better UX
+    if (liquidHeader) {
+        liquidHeader.addEventListener('click', (e) => {
+            console.log('Header Clicked - Toggling Glow'); // DEBUG
 
-        // Toggle Glow on Liquid Header (Top Container)
-        liquidHeader.classList.toggle('glow-active');
+            // Toggle Glow on Liquid Header (Top Container)
+            liquidHeader.classList.toggle('glow-active');
 
-        // Toggle Glow on Spines and Bottom Containers (Synchronized Pulse)
-        const spineBig = document.querySelector('.spine-connector');
-        const spineSmall = document.querySelector('.spine-connector-small');
-        const groups = document.querySelectorAll('.group-container');
+            // Toggle Glow on Spines and Bottom Containers (Synchronized Pulse)
+            const spineBig = document.querySelector('.spine-connector');
+            const spineSmall = document.querySelector('.spine-connector-small');
+            const groups = document.querySelectorAll('.group-container');
 
-        if (spineBig) {
-            spineBig.classList.toggle('glow-active');
-            console.log('Toggled Big Spine');
-        }
-        if (spineSmall) {
-            spineSmall.classList.toggle('glow-active');
-            console.log('Toggled Small Spine');
-        }
-        groups.forEach(group => {
-            group.classList.toggle('glow-active');
-            console.log('Toggled Group');
+            if (spineBig) spineBig.classList.toggle('glow-active');
+            if (spineSmall) spineSmall.classList.toggle('glow-active');
+
+            // Toggle glow on ALL groups (including profile group if not already handled by parent)
+            groups.forEach(group => group.classList.toggle('glow-active'));
+
+            // Haptic feedback
+            if (navigator.vibrate) navigator.vibrate(50);
         });
-
-        // Haptic feedback
-        if (navigator.vibrate) navigator.vibrate(50);
-    });
-}
+    }
+});
 
 // --- Action Logic ---
 function downloadVCard() {
