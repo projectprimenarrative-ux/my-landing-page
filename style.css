@@ -179,6 +179,32 @@ body.wireframe-active .corner-accents::after {
     box-shadow: 0 0 10px var(--accent-primary);
 }
 
+/* Central Neon Spine/Connecting Line */
+.central-line {
+    position: fixed;
+    top: 41.5vh;
+    /* Touch the bottom of the header curve */
+    left: 50%;
+    width: 3px;
+    /* Stronger line */
+    height: 58.5vh;
+    /* Go to bottom */
+    background: linear-gradient(180deg,
+            #FF7043 0%,
+            /* Solid Start */
+            #FF7043 40%,
+            rgba(255, 112, 67, 0) 100%
+            /* Fade out at footer */
+        );
+    transform: translateX(-50%);
+    z-index: 0;
+    /* Behind content */
+    box-shadow:
+        0 0 10px var(--accent-primary),
+        0 0 20px rgba(255, 112, 67, 0.5);
+    pointer-events: none;
+}
+
 @keyframes wireframe-pulse {
     0% {
         border-color: rgba(255, 112, 67, 0.1);
