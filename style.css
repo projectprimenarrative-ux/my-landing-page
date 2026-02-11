@@ -40,14 +40,13 @@ body {
     position: fixed;
     top: 50%;
     left: 50%;
-    min-width: 100%;
-    min-height: 100%;
-    width: auto;
-    height: auto;
+    /* Fit within the screen without cropping */
+    width: 100%;
+    height: 100%;
     z-index: -2;
-    object-fit: cover;
+    object-fit: contain;
+    /* SHOWS FULL VIDEO (No Crop) */
     transform: translate(-50%, -50%);
-    /* Centered Crop */
     /* Cosmic Orange Filter Chain */
     filter: sepia(100%) hue-rotate(-20deg) saturate(300%) contrast(1.2) brightness(0.8);
 }
