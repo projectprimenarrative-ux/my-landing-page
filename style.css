@@ -117,12 +117,14 @@ body {
     width: 140px;
     /* Restored to Large */
     height: 140px;
-    margin: 0 auto 1.5rem;
+    margin: 0 auto 0.5rem;
+    /* Reduced bottom margin for tighter grouping */
     position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
-    animation: float 6s ease-in-out infinite, pulse-glow 4s ease-in-out infinite;
+    /* animation: float 6s ease-in-out infinite, pulse-glow 4s ease-in-out infinite; */
+    /* Animation removed for stability */
     -webkit-tap-highlight-color: transparent;
 }
 
