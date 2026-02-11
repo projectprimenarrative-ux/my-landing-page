@@ -27,13 +27,11 @@ body {
     font-family: var(--font-main);
     overflow-x: hidden;
     height: 100vh;
-    /* Force single screen height */
     min-height: 100dvh;
-    /* Mobile friendly */
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    /* Distribute header and content */
+    justify-content: flex-start;
+    /* Stack from top (Stabilize) */
     align-items: center;
 }
 
@@ -42,10 +40,10 @@ body {
 /* Liquid Glass Header */
 .liquid-header {
     width: 100%;
-    height: auto;
-    /* Allow content to dictate height */
-    padding: 3rem 1rem 4rem;
-    /* Top padding + Bottom padding for curve space */
+    height: 42vh;
+    /* Fixed, stable proportion (Golden Ratio-ish) */
+    padding: 0;
+    /* Let flex center the content */
 
     display: flex;
     flex-direction: column;
@@ -83,19 +81,19 @@ body {
 .container {
     width: 100%;
     max-width: 480px;
-    padding: 0 2rem 2rem;
-    /* Remove top padding, pushed by header */
-    height: 100%;
+    padding: 1.5rem 2rem 2rem;
+    /* Clean content spacing */
+    height: auto;
     flex-grow: 1;
-    /* Fill remaining space */
 
     position: relative;
     z-index: 1;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    /* Center content vertically in remaining space */
-    gap: 1.5rem;
+    justify-content: flex-start;
+    gap: 1rem;
+    overflow-y: auto;
+    /* Safety scroll */
 }
 
 /* JWST Wireframe Container */
@@ -421,19 +419,19 @@ h1 {
 
 @media (max-width: 480px) {
     .liquid-header {
-        height: auto;
-        padding: 2.5rem 1rem 3rem;
-        /* Tighter mobile padding */
+        height: 45vh;
+        /* Standard mobile half-split */
+        padding: 0;
         border-radius: 0 0 40px 40px;
     }
 
     .container {
-        padding: 0 1rem 1rem;
+        padding: 1rem 1rem 2rem;
         /* No top padding */
         gap: 0.8rem;
         height: auto;
         flex-grow: 1;
-        justify-content: center;
+        justify-content: flex-start;
     }
 
     .profile-header {
