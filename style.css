@@ -179,30 +179,19 @@ body.wireframe-active .corner-accents::after {
     box-shadow: 0 0 10px var(--accent-primary);
 }
 
-/* Central Neon Spine/Connecting Line */
-.central-line {
-    position: fixed;
-    top: 41.5vh;
-    /* Touch the bottom of the header curve */
-    left: 50%;
-    width: 3px;
-    /* Stronger line */
-    height: 58.5vh;
-    /* Go to bottom */
-    background: linear-gradient(180deg,
-            #FF7043 0%,
-            /* Solid Start */
-            #FF7043 40%,
-            rgba(255, 112, 67, 0) 100%
-            /* Fade out at footer */
-        );
-    transform: translateX(-50%);
-    z-index: 0;
-    /* Behind content */
+/* Physical Spine Connector (The "Wire" between Header and Content) */
+.spine-connector {
+    width: 2px;
+    height: 3rem;
+    /* Physical height acting as spacer */
+    background: var(--accent-primary);
+    margin: -1px auto 0;
+    /* Tiny negative margin to ensure seamless touch */
     box-shadow:
         0 0 10px var(--accent-primary),
-        0 0 20px rgba(255, 112, 67, 0.5);
-    pointer-events: none;
+        0 0 20px var(--accent-primary);
+    z-index: 0;
+    flex-shrink: 0;
 }
 
 @keyframes wireframe-pulse {
@@ -474,12 +463,13 @@ h1 {
     .container {
         height: 58vh;
         /* Fixed proportion: Bottom 58% */
-        padding: 0 1.5rem 0.5rem;
+        padding: 0 1.5rem 1rem;
         gap: 0.5rem;
-        justify-content: center;
-        /* Group centers */
+        justify-content: flex-start;
+        /* Stack from top (Spine -> Pro -> Org) */
+        align-items: stretch;
+        /* Ensure full width alignment */
         overflow-y: hidden;
-        /* Prevent scroll if possible */
     }
 
     .profile-header {
