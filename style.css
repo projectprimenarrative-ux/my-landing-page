@@ -452,6 +452,8 @@ h1 {
     height: 24px;
     margin: 0;
     transition: all 0.3s ease;
+    pointer-events: none;
+    /* Ensure click passes to link */
 }
 
 .link-card:hover .icon-svg {
@@ -495,9 +497,10 @@ h1 {
     }
 
     .container {
-        height: auto;
-        max-height: 58vh;
-        /* Fixed proportion: Bottom 58% */
+        flex: 1;
+        /* Fill remaining space */
+        height: 100%;
+        /* Ensure it takes full available height */
         padding: 0 1.5rem 1rem;
         gap: 0.5rem;
         justify-content: flex-start;
@@ -506,6 +509,8 @@ h1 {
         /* Ensure full width alignment */
         overflow-y: auto;
         /* Allow scrolling if content overflows */
+        z-index: 5;
+        /* Ensure it sits above background elements */
     }
 
     .profile-header {
