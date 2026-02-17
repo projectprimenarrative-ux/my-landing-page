@@ -25,6 +25,34 @@ document.addEventListener('DOMContentLoaded', () => {
             if (navigator.vibrate) navigator.vibrate(50);
         });
     }
+
+    // Instagram Deep Link Handler (Mobile App Opener)
+    const instagramLink = document.getElementById('instagram-link');
+    if (instagramLink) {
+        instagramLink.addEventListener('click', (e) => {
+            // Check if user is on a mobile device
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+            if (isMobile) {
+                e.preventDefault();
+                const webUrl = instagramLink.href;
+                // Try the deep link schema
+                const appUrl = "instagram://user?username=project.prime.directive";
+
+                // Attempt to open the app
+                window.location.href = appUrl;
+
+                // Fallback to web URL if app doesn't open within 1s
+                setTimeout(() => {
+                    // Check if the user is still on the page (meaning app didn't open)
+                    // Note: This check is imperfect as some browsers pause JS when backgrounded,
+                    // but it's the standard fallback method.
+                    window.location.href = webUrl;
+                }, 1000);
+            }
+            // Desktop users proceed normally with href (target="_blank")
+        });
+    }
 });
 
 // --- Action Logic ---
